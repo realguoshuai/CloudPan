@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhiyou100.dao.AccountDao">
+	<!--<resultMap type="AccountDO" id="listAccount">
+		<id property="id" column="id" />
+		<result property="email" column="email" />
+		<result property="password" column="password" />
+		<result property="active" column="active" />
+	</resultMap>
+
+	<select id="listAccount" resultMap="listAccount"> -->
+	
+	
+	<select id="listAccount" resultType="accountDO">
+		SELECT
+		id
+		,email
+		,password
+		,gmt_create
+		,gmt_modified
+		FROM account;
+	</select>
+	<select id="listAccountByEmail" resultType="accountDO">
+		SELECT
+		id
+		,email
+		,password
+		FROM account
+		WHERE email = #{email}
+	
+	</select>
+
+	<insert id="addAccount">
+		INSERT  INTO account
+		(`email`,`password`,`active`)
+		VALUES
+		(#{email},#{password},${active});
+	</insert>
+
+	<update id="updateAccount">
+		UPDATE account
+		<set>
+			<if test="id != null">
+				id = #{id},
+			</if>
+			<if test="email != null">
+				email = #{email},
+			</if>
+
+			<if test="password != null">
+				password = #{password},
+			</if>
+
+			<if test="active != null">
+				active = #{active},
+			</if>
+		</set>
+		WHERE
+		id = #{id}
+	</update>
+	<delete id="deleteAccount">
+		delete from account
+		WHERE
+		id = #{id}
+	</delete>
+</mapper>
