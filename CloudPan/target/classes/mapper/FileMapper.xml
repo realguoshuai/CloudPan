@@ -5,14 +5,28 @@
   <mapper namespace="com.zhiyou100.dao.FileDao">
 	<select id="listFile" resultType="fileDO">
 		SELECT
-		id
-		,path
-		,size
-		,type
-		,md5
-		,gmt_create
-		,gmt_modified
-		FROM file;
+		d.id
+		,d.name 
+		,a.email
+		,a.id
+		,f.size size
+		,d.is_file isFile
+		,d.account_id accountId
+		,d.parent_id  parentId
+		,d.file_id  fileId
+		,d.gmt_create  gmtCreate
+		,d.gmt_modified gmtModefied
+		FROM file f INNER JOIN directory d on f.id=d.file_id
+		RIGHT JOIN account a
+		ON	
+		d.account_id=a.id
+		<where>
+		<if test="accountId != null">
+		d.account_id = #{accountId},
+		</if>
+		AND parent_id=0
+		</where>
+		ORDER BY d.is_file;
 	</select>
 
 	<select id="downFile" resultType="integer">

@@ -9,29 +9,49 @@
 		<result property="isFile" column="is_file" />
 		<result property="accountId" column="account_id" />
 		<result property="parentId" column="parent_id" />
-		<result property="fileId" column="fileId" />
+		<result property="fileId" column="file_id" />
+		<result property="size" column="size" />
 	</resultMap>
 	
 		<select id="listDirectory" resultMap="listDirectory">
-		SELECT
+		<!-- SELECT
 		d.id
 		,d.name 
+		,a.email
+		,a.id
 		,d.is_file isFile
 		,d.account_id accountId
 		,d.parent_id  parentId
 		,d.file_id  fileId
 		,d.gmt_create  gmtCreate
-		,d.gmt_modified gmtModefied
+		,d.gmt_modified gmtModified
 		FROM directory d
 		RIGHT JOIN account a
 		ON
-		d.account_id=a.id
+		d.account_id=a.id  -->
+		 SELECT
+		d.id
+		,d.name 
+		,a.email
+		,a.id
+		,f.size size
+		,d.is_file isFile
+		,d.account_id accountId
+		,d.parent_id  parentId
+		,d.file_id  fileId
+		,d.gmt_create  gmtCreate
+		,d.gmt_modified gmtModified
+		FROM  directory d LEFT JOIN file f  on f.id=d.file_id
+		RIGHT JOIN account a
+		ON	
+		d.account_id=a.id 
 		<where>
 		<if test="accountId != null">
-				d.account_id = #{accountId},
+		d.account_id = #{accountId},
 		</if>
 		AND parent_id=0
 		</where>
+		ORDER BY d.is_file;
 	</select>
 
 	<select id="listDirectoryBy" resultType="directoryDO">
@@ -63,6 +83,12 @@
 		(`name`,`is_file`,`account_id`,`parent_id`)
 		VALUES
 		(#{name},${isFile},${accountId},${parentId});
+	</insert>
+	<insert id="addDirectoryName">
+		INSERT  INTO directory
+		(`name`,`is_file`,`account_id`,`parent_id`)
+		VALUES
+		(#{name},0,1,0);
 	</insert>
 	
 	<update id="updateDirectoryName">
@@ -114,6 +140,10 @@
 	<delete id="deleteDirectory">
 		delete from directory
 		WHERE
-		id = #{id}
+		id in
+		<foreach collection="array" item="item" open="(" close=")"
+			separator=",">
+			#{item}
+		</foreach>
 	</delete>
 	</mapper>

@@ -50,4 +50,15 @@ public class DirectoryServiceImpl implements DirectoryService {
 		return listDirectoryBy;
 	}
 
+
+	public void deleteDirectory(String[] idArray) {
+		// TODO Auto-generated method stub
+		dao.deleteDirectory(idArray);
+	}
+
+	public void addDirectoryName(DirectoryDO directoryDO) {
+		dao.addDirectoryName(directoryDO);
+		
+	}
+
 }

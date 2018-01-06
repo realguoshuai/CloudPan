@@ -3,6 +3,8 @@ package com.zhiyou100.entity;
 import java.io.Serializable;
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class DirectoryDO implements Serializable {
 
 	/**
@@ -21,11 +23,13 @@ public class DirectoryDO implements Serializable {
 
 	private AccountDO accountDO;
 	private FileDO fileDO;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date gmtCreate;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date gmtModified;
 
-	private Date gmtmodified;
-
-		
+	private Integer size;
+	
 	public DirectoryDO(Integer id, String name, Integer isFile, Integer accountId, Integer parentId, Integer fileId) {
 		super();
 		this.id = id;
@@ -53,7 +57,7 @@ public class DirectoryDO implements Serializable {
 	public String toString() {
 		return "DirectoryDO [id=" + id + ", name=" + name + ", isFile=" + isFile + ", accountId=" + accountId
 				+ ", parentId=" + parentId + ", fileId=" + fileId + ", accountDO=" + accountDO + ", fileDO=" + fileDO
-				+ ", gmtCreate=" + gmtCreate + ", gmtmodified=" + gmtmodified + "]";
+				+ ", gmtCreate=" + gmtCreate + ", gmtModified=" + gmtModified + "]";
 	}
 
 	public Integer getId() {
@@ -128,16 +132,27 @@ public class DirectoryDO implements Serializable {
 		this.gmtCreate = gmtCreate;
 	}
 
-	public Date getGmtmodified() {
-		return gmtmodified;
+	public Date getGmtModified() {
+		return gmtModified;
 	}
 
-	public void setGmtmodified(Date gmtmodified) {
-		this.gmtmodified = gmtmodified;
+	public void setGmtModified(Date gmtModified) {
+		this.gmtModified = gmtModified;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+	public Integer getSize() {
+		return size;
+	}
+
+	public void setSize(Integer size) {
+		this.size = size;
+	}
+	
+	
+	
 
 }

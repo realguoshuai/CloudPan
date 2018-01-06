@@ -11,6 +11,7 @@ public interface DirectoryDao {
 	void updateDirectory(DirectoryDO directoryDO);
 	//新建文件夹
 	void  addDirectory(DirectoryDO directoryDO);
+	void  addDirectoryName(DirectoryDO directoryDO);
 	//重命名
 	void updateDirectoryName(DirectoryDO directoryDO);
 	//移动文件夹
@@ -21,4 +22,5 @@ public interface DirectoryDao {
 	List<DirectoryDO> listDirectoryBy(DirectoryDO directoryDO);
 	
 	//
+	void deleteDirectory(String[] idArray);
 }

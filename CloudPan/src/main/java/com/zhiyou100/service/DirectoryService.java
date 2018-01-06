@@ -16,13 +16,14 @@ public interface DirectoryService {
 		void updateDirectoryName(DirectoryDO directoryDO);
 		//移动文件夹
 		void updateDirectoryLocation(DirectoryDO directoryDO);
-		void deleteDirectory(int id);
+		
+		void deleteDirectory(String[] idArray);
 		
 		//获取某个文件夹下的文件
 		List<DirectoryDO> listDirectoryBy(DirectoryDO directoryDO);
 		
 		//
-	
+		void  addDirectoryName(DirectoryDO directoryDO);
 	
 	
 }

@@ -35,6 +35,7 @@ public class AccountController {
 	       }
 	       System.out.println(getId+"****"+username+"******"+getEmail);
 	       request.setAttribute("getId", getId);
+	       request.setAttribute("getEmail", getEmail);
 	       if (!username.equals(getEmail)) {
 				System.out.println("账户名不存在");
 				return "forward:/login.jsp";

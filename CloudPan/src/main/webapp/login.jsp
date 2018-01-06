@@ -14,13 +14,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>登录 - 智游客户关系管理系统</title>
+<title>登录 - 智游云盘管理系统</title>
 <link rel="stylesheet" href="<%= basePath + "/css/index.css" %>">
 </head>
 <body>
 	<div class="login">
         <img src="<c:url value="/image/logo.png" />" alt="智游">
-        <p>智游客户关系管理系统</p>
+        <p>智游云盘管理系统</p>
         <form action="<c:url value="/login" />" method="post">
             <div>
                 <input type="text" id="username" name="username" value="${param.name}" placeholder="请输入用户名">

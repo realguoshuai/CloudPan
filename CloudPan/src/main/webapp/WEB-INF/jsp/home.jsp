@@ -53,7 +53,10 @@
 							<a href='<c:url value="/course"></c:url>'>功能宝箱</a>
 						</li>
 						<li>
-							<a href='<c:url value="/subject"></c:url>'>退出登录</a>
+							<a href='<c:url value="/subject"></c:url>' onclick="logout()">退出登录</a>
+						</li>
+						<li>
+							<a href="#"><%=request.getAttribute("getEmail") %></a>
 						</li>
 					</ul>
 				</div>
@@ -66,35 +69,18 @@
 			<div class="panel-heading">个人中心</div>
 			<div id="toolbar" class="btn-group" role="group" aria-label="...">
 				
-				<%-- <div id="toolbar">
-					<select id="speaker_select">
-						<option value="0">全部讲师</option>
-						<c:forEach items="${speakers}" var="speaker">
-							<option value="${speaker.id }">${speaker.name }</option>
-						</c:forEach>
-					</select>
-
-					<select id="course_select">
-						<option value="0">课程</option>
-						<c:forEach items="${courses }" var="course">
-							<option value="${course.id}">${course.name }</option>
-						</c:forEach>
-					</select>
-				</div> --%>
-				
-				
 				<button type="button" id="btn_delete" class="btn btn-default"
 					onclick="deleteSomeVideo()">
 					<span class=" glyphicon glyphicon-open" aria-hidden="true"></span>
 					上传
 				</button>
 				<button type="button" id="btn_delete" class="btn btn-default"
-					onclick="deleteSomeVideo()">
+					onclick="getPath()">
 					<span class="glyphicon glyphicon-save" aria-hidden="true"></span>
 					下载
 				</button>
 				<button type="button" id="btn_delete" class="btn btn-default"
-					onclick="deleteSomeVideo()">
+					onclick="deleteSomeDirectory()">
 					<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 					删除
 				</button>
@@ -103,10 +89,18 @@
 					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 					新建文件夹
 				</button>
+			<div>
+			<button type="button" class="btn btn-default"
+					onclick="getback()">
+					<span class="glyphicon glyphicon-share-alt" aria-hidden="true">&emsp;上一页</span>
+				</button>
+				<button type="button" id="btn_add" class="btn btn-default"
+					onclick="backHome()">
+					<span class="glyphicon glyphicon-home" aria-hidden="true">&emsp;首页</span>
 				
-				
+				</button>
 			</div>
-
+			</div>
 			<!-- Table -->
 			<table class="table"></table>
 		</div>
@@ -121,186 +115,25 @@
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					<h4 class="modal-title" id="exampleModalLabel">添加视频</h4>
+					<h4 class="modal-title" id="exampleModalLabel">新建文件夹</h4>
 				</div>
 				<div class="modal-body">
 					<form>
 						<div class="form-group">
-							<label for="recipient-name" class="control-label">标题：</label>
+							<label for="recipient-name" class="control-label">文件名：</label>
 							<input type="text" class="form-control" id="add_name">
 						</div>
 					</form>
 				</div>
-				<select id="add_speakerId">
-					<option >选择主讲人</option>
-					<c:forEach items="${ speakers}" var="speaker">
-						<option  value="${speaker.id}">${speaker.name }</option>
-					</c:forEach>
-				</select>
 
-				<select id="add_courseId">
-					<option >选择所属课程</option>
-					<c:forEach items="${courses}" var="course">
-						<option  value="${course.id}">${course.name }</option>
-					</c:forEach>
-				</select>
-				<div class="modal-body">
-							<label for="recipient-name" class="control-label">时长:</label>
-							<input type="number" class="form-control" id="add_length">
-						</div>
-				<div class="modal-body">
-					<label for="recipient-name" class="control-label">播放次数:</label>
-					<input type="number" class="form-control" id="add_play_count">
-				</div>
-				<div class="modal-body">
-					<form>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">封面地址：</label>
-							<input type="text" class="form-control" id="add_cover_url">
-						</div>
-					</form>
-				</div>
-				<div class="modal-body">
-					<form>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">视频地址：</label>
-							<input type="text" class="form-control" id="add_video_url">
-						</div>
-					</form>
-				</div>
-				<div class="modal-body">
-					<form>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">视频介绍：</label>
-							<input type="text" class="form-control" id="add_describe">
-						</div>
-					</form>
-				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" onclick="addVideo()">添加</button>
+					<button type="button" class="btn btn-primary" onclick="addDirectory()">添加</button>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="modal_update" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h4 class="modal-title" id="exampleModalLabel">更新视频</h4>
-				</div>
-				<div class="modal-body">
-					<form>
-						<input type="hidden" id="update_id">
 
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">名字：</label>
-							<input type="text" class="form-control" id="update_name">
-						</div>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">时长：</label>
-							<input type="text" class="form-control" id="update_length">
-						</div>
-						<select id="update_speakerId">
-							<option >选择主讲人</option>
-							<c:forEach items="${speakers }" var="speaker">
-								<option  value="${speaker.id}">${speaker.name }</option>
-							</c:forEach>
-						</select>
-
-						<select id="update_courseId">
-							<option>选择所属课程</option>
-							<c:forEach items="${courses }" var="course">
-								<option  value="${course.id}">${course.name }</option>
-							</c:forEach>
-						</select>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">播放次数：</label>
-							<input type="text" class="form-control" id="update_play_count">
-						</div>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">封面地址：</label>
-							<input type="text" class="form-control" id="update_cover_url">
-						</div>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">视频地址：</label>
-							<input type="text" class="form-control" id="update_video_url">
-						</div>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">简介：</label>
-							<input type="text" class="form-control" id="update_describe">
-						</div>
-
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary"
-						onclick="updateVideo()">更新</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div>
-		<div class="modal fade" id="modal_detail" tabindex="-1" role="dialog"
-			aria-labelledby="exampleModalLabel">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h4 class="modal-title" id="exampleModalLabel">视频详情</h4>
-					</div>
-					<div class="modal-body">
-						<form>
-						<input type="hidden" id="detail_id">
-
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">名字：</label>
-							<input type="text" class="form-control" id="detail_name">
-						</div>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">课程：</label>
-							<input type="text" class="form-control" id="detail_course">
-						</div>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">学科：</label>
-							<input type="text" class="form-control" id="detail_subject">
-						</div>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">时长：</label>
-							<input type="text" class="form-control" id="detail_length">
-						</div>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">播放次数：</label>
-							<input type="text" class="form-control" id="detail_play_count">
-						</div>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">封面地址：</label>
-							<input type="text" class="form-control" id="detail_cover_url">
-						</div>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">视频地址：</label>
-							<input type="text" class="form-control" id="detail_video_url">
-						</div>
-						<div class="form-group">
-							<label for="recipient-name" class="control-label">简介：</label>
-							<input type="text" class="form-control" id="detail_describe">
-						</div>
-
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src='<c:url value="/js/jquery-3.2.1.min.js"></c:url>'></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -327,36 +160,17 @@
 			$('#modal_add').modal('show');
 		}
 
-		function addVideo() {
+		function addDirectory() {
 			var name = $('#add_name').val();
-			var speakerId = $('#add_speakerId').val();
-			var courseId = $('#add_courseId').val();
-			var coverId = $('#add_cover_id').val();
-			var videoId = $('#add_video_id').val();
-			var describe = $('#add_describe').val();
-			var length = $('#add_length').val();
-			var playCount = $('#add_play_count').val();
-			var coverUrl = $('#add_cover_url').val();
-			var videoUrl = $('#add_video_url').val();
 			
 			/* alert(name) */
 			$.ajax({
 
-				url : '<c:url value="/video/add"></c:url>',
+				url : '<c:url value="/directory/add"></c:url>',
 
 				type : 'POST',
-
 				data : JSON.stringify({
 					'name' : name,
-					'speakerId' : speakerId,
-					'courseId' : courseId,
-					'coverId' : coverId,
-					'videoId' : videoId,
-					'describe' : describe,
-					'length' : length,
-					'playCount' : playCount,
-					'coverUrl' : coverUrl,
-					'videoUrl' : videoUrl,
 				}),
 
 				dateType : 'json',
@@ -374,16 +188,16 @@
 					}
 				},
 				error : function(error) {
-					alert(error);
+					alert("出错了");
 				}
 			});
 		}
 	/* 单选删除   */
-		function deleteVideo(id) {
+		function deleteDirectory(id) {
 
 			$.ajax({
 
-				url : "<c:url value='/video/" + id + "'></c:url>",
+				url : "<c:url value='/directory/" + id + "'></c:url>",
 
 				type : 'DELETE',
 
@@ -404,7 +218,7 @@
 
 		}
 		/*  批量删除 */
-		function deleteSomeVideo(ids) {
+		function deleteSomeDirectory(ids) {
 
 			var list = $('.table').bootstrapTable('getSelections');
 
@@ -423,7 +237,7 @@
 
 				$.ajax({
 
-					url : "<c:url value='/video/" + ids + "'></c:url>",
+					url : "<c:url value='/directory/" + ids + "'></c:url>",
 
 					type : 'DELETE',
 
@@ -443,32 +257,36 @@
 				});
 			}
 		}
-		// ----------------- 弹出更新模态框，需要指定 id
-		function showUpdateModal(id) {
+		/* 获取下载链接  */
+	function getPath(ids){
 
-			// 发送 ajax 请求获取指定商品的信息
+		var list = $('.table').bootstrapTable('getSelections');
+
+		if (list != null) {
+
+			var idArray = new Array();
+			// $.each(需要遍历的集合对象, function(索引，值){});
+			$.each(list, function(index, value) {
+
+				// 遍历 list 取出每一个的 id 放入 idArray 这个数组
+				idArray[index] = value.id;
+			});
+
+			// 生成拼接后的 id 字符串
+			var ids = idArray.join(",");
+
 			$.ajax({
-				url : "<c:url value='/video/get/" + id + "'></c:url>",
+
+				url : "<c:url value='/directory/" + ids + "'></c:url>",
+
+				type : 'DELETE',
 
 				success : function(responseVO) {
 
 					if (responseVO.errorCode == 0) {
 
-						// alert(JSON.stringify(responseVO.data));
-						// 把商品信息放入输入框
-						$('#update_name').val(responseVO.data.name);
-						$('#update_length').val(responseVO.data.length);
-						$('#update_speakerId').val(responseVO.data.speakerId);
-						$('#update_courseId').val(responseVO.data.courseId);
-						$('#update_play_count').val(responseVO.data.playCount);
-						$('#update_cover_url').val(responseVO.data.coverUrl);
-						$('#update_video_url').val(responseVO.data.videoUrl);
-						$('#update_describe').val(responseVO.data.describe);
-
-						$('#update_id').val(responseVO.data.id);
-
-						// 弹出模态框
-						$('#modal_update').modal('show');
+						// 刷新表格
+						$('.table').bootstrapTable('refresh');
 					}
 				},
 
@@ -478,112 +296,25 @@
 				}
 			});
 		}
-
-
-	/* 展示详情 */
-	function showDetailModal(id) {
-
-		// 发送 ajax 请求获取指定商品的信息
-		$.ajax({
-			url : "<c:url value='/video/get/" + id + "'></c:url>",
-
-			success : function(responseVO) {
-
-				if (responseVO.errorCode == 0) {
-//alert(responseVO.data)
-					//alert(JSON.stringify(responseVO.data));
-					// 把商品信息放入输入框
-					$('#detail_name').val(responseVO.data.name);
-					$('#detail_length').val(responseVO.data.length);
-					$('#detail_subject').val(responseVO.data.subjectId);
-					$('#detail_course').val(responseVO.data.courseId);
-					$('#detail_play_count').val(responseVO.data.playCount);
-					$('#detail_cover_url').val(responseVO.data.coverUrl);
-					$('#detail_video_url').val(responseVO.data.videoUrl);
-					$('#detail_describe').val(responseVO.data.describe);
-
-					$('#detail_id').val(responseVO.data.id);
-
-					// 弹出模态框
-					$('#modal_detail').modal('show');
-				}
-			},
-
-			error : function(error) {
-
-				alert(error);
-			}
-		});
+		
 	}
-	// ----------------- 更新商品
-	function updateVideo() {
-		// 获取输入的每一项的值
-		var name = $('#update_name').val();
-		var length = $('#update_length').val();
-		var speakerId = $('#update_speakerId').val();
-		var courseId = $('#update_courseId').val();
-		var playCount = $('#update_play_count').val();
-		var coverId = $('#update_cover_id').val();
-		var videoId = $('#update_video_id').val();
-		var describe = $('#update_describe').val();
-		var coverUrl = $('#detail_cover_url').val();
-		var videoUrl = $('#detail_video_url').val();
+function getback(){
+	window.location.href = document.referrer;
+	window.history.back(-1);
+}
+function backHome(){
+	alert("回到首页")
+}
 
-		var id = $('#update_id').val();
-
-		// 使用 ajax 发送到服务器进行添加
-		$.ajax({
-
-			url : "<c:url value='/video/update/" + id + "'></c:url>",
-
-			type : 'PUT',
-
-			data : JSON.stringify({
-				'name' : name,
-				'length' : length,
-				'speakerId' : speakerId,
-				'courseId' : courseId,
-				'playCount' : playCount,
-				'coverId' : coverId,
-				'videoId' : videoId,
-				'describe' : describe,
-			}),
-
-			dataType : 'json',
-
-			contentType : 'application/json',
-
-			success : function(responseVO) {
-
-				if (responseVO.errorCode == 0) {
-
-					// 添加成功，收回模态框
-					$('#modal_update').modal('hide');
-
-					// 刷新表格
-					$('.table').bootstrapTable('refresh');
-				}
-			},
-
-			error : function(error) {
-
-				alert(error);
-			}
-		});
+function logout(){
+	if (confirm("你确定要注销身份吗？是－选择确定，否-选择取消")){
+		window.location.href="localhost:8080/CloudPan/login.jsp"
+		location.reload([bForceGet])  
 	}
+}
 /* 展示所有  */
 		$(document).ready(function() {
 
-			$('#speaker_select').change(function() {
-
-				// 选择讲师后，自动刷新 table
-				$('.table').bootstrapTable('refresh');
-			})
-			$('#course_select').change(function() {
-
-				// 选择讲师后，自动刷新 table
-				$('.table').bootstrapTable('refresh');
-			})
 			$('.table').bootstrapTable(
 			  {
 				toolbar : '#toolbar',
@@ -594,18 +325,38 @@
 							checkbox : true
 							},
 							{
-							 title : '文件名',
+							 /* title : '文件名',
 							 field : 'name',
 							 align : 'center',
-							},
+							 */
+								title : '文件名',
+								align : 'center',
+								formatter : function(
+										value, row,
+										index) {
+										var span=row.name 
+
+										if (row.isFile=0) {
+											span="<span class='glyphicon glyphicon-folder-open'  aria-hidden='true'>&emsp;"+span
+										}
+										return span;
+								},
+								 editable : {
+						           type : 'text',
+								   title : '课程标题',
+									validate : function(v) {if (!v)
+												return '课程标题不能为空';
+											}
+										}
+								},
 							{
 							 title : '大小',
 							 field : 'size',
 							 align : 'center',
 							},
 							{
-							 title : '创建时间',
-							 field : 'gmtCreate',
+							 title : '修改时间',
+							 field : 'gmtModified',
 							 align : 'center',
 							},
 							{
@@ -613,24 +364,13 @@
 								title : '操作',
 								align : 'center',
 
-						formatter : function(
-								value, row,
-								index) {
+						formatter : function(value, row,index) {
 
-							var detailButton = "<button class='btn btn-default ' type='button' onclick='showDetailModal("
-									+ row.id
-									+ ")'><span class='glyphicon glyphicon-eye-open'  aria-hidden='true'></span></button>";
-
-							var updateButton = "&emsp;<button class='btn btn-default ' type='button' onclick='showUpdateModal(" 
-										+ row.id
-										+ ")'> <span class='glyphicon glyphicon-pencil'  aria-hidden='true'></span></button>"
-							var deleteButton = "&emsp;<button class='btn btn-default ' type='button'  onclick='deleteVideo("
+							var deleteButton = "&emsp;<button class='btn btn-default ' type='button'  onclick='deleteDirectory("
 										+ row.id
 										+ ")'><span class='glyphicon glyphicon-trash'  aria-hidden='true'></span> </button>"
 								
-							return detailButton
-									+ updateButton
-									+ deleteButton;
+							return deleteButton;
 						}
 					} ],
 
@@ -644,22 +384,6 @@
 								strictSearch :false,
 								//搜索框右置 
 								searchAlign:'right',
-
-								queryParams : function(params) {
-
-									// 设置传递给服务器的数据
-									// params 默认包含 offset，limit，search，sort，order
-
-									// 新增参数 speakerId
-									params['speakerId'] = $(
-											"#speaker_select")
-											.val();
-									params['courseId'] = $(
-											"#course_select")
-											.val();
-
-									return params;
-								},
 
 								sidePagination : 'server',
 
@@ -688,19 +412,19 @@
 										field, row, oldValue,
 										$el) {
 										$.ajax({
-												url : "<c:url value='/video/update/" + row.id + "'></c:url>",
+												url : "<c:url value='/directory/rename/" + row.id + "'></c:url>",
 												type : 'PUT',
 												// 415 是 contentType 没有设置对
 												contentType : 'application/json',
 												data : JSON.stringify(row),
 
 												success : function(responseVO) {
-
 												},
 
 												error : function(error) {
 													alert(error);
 												},
+												
 											});
 								},
 							});
